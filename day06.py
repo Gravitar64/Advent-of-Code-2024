@@ -11,20 +11,20 @@ def run_guard_run(p, guard_pos, guard_dir):
   counter = 0
   while True:
     (x, y), (dx, dy) = guard_pos, guard_dir
-    nx, ny = x + dx, y + dy
+    new_pos = x + dx, y + dy
 
-    if (nx, ny) not in p: return distinct_pos
-    if counter > 1000: return 'loop'
+    if new_pos not in p: return distinct_pos
+    if counter > 500: return 'loop'
 
-    if p[nx, ny] == '#':
+    if p[new_pos] == '#':
       guard_dir = -dy, dx
     else:
-      guard_pos = nx, ny
-      if (nx, ny) in distinct_pos:
+      guard_pos = new_pos
+      if new_pos in distinct_pos:
         counter += 1
       else:
         counter = 0
-      distinct_pos.add((nx, ny))
+        distinct_pos.add(new_pos)
 
 
 def solve(p):
@@ -35,10 +35,10 @@ def solve(p):
   distinct_pos = run_guard_run(p, guard_pos, guard_dir)
   part1 = len(distinct_pos) + 1
 
-  for x, y in distinct_pos:
-    p[x, y] = '#'
+  for pos in distinct_pos:
+    p[pos] = '#'
     if run_guard_run(p, guard_pos, guard_dir) == 'loop': part2 += 1
-    p[x, y] = '.'
+    p[pos] = '.'
 
   return part1, part2
 
