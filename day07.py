@@ -3,7 +3,7 @@ import time, re
 
 def load(file):
   with open(file) as f:
-    return [list(map(int, re.findall('\d+', line))) for line in f.readlines()]
+    return [list(map(int, re.findall('\d+', row))) for row in f]
 
 
 def is_valid(target, numbers, part2):
@@ -16,9 +16,9 @@ def is_valid(target, numbers, part2):
       if sub >= number:
         new_sub.add(sub - number)
       if not part2: continue
-      str_i, str_n = map(str,[sub, number])
-      if sub > number and str_i.endswith(str_n):
-        new_sub.add(int(str_i[:-len(str_n)]))
+      str_sub, str_num = map(str, [sub, number])
+      if sub > number and str_sub.endswith(str_num):
+        new_sub.add(int(str_sub[:-len(str_num)]))
     subtotals = new_sub
   return target if 0 in subtotals else False
 
@@ -26,8 +26,8 @@ def is_valid(target, numbers, part2):
 def solve(p):
   part1 = part2 = 0
   for target, *numbers in p:
-    part1 += is_valid(target, numbers, part2=False)
-    part2 += is_valid(target, numbers, part2=True)
+    part1 += is_valid(target, numbers,part2=False)
+    part2 += is_valid(target, numbers,part2=True)
   return part1, part2
 
 
