@@ -1,4 +1,4 @@
-import time, re, itertools as itt
+import time, re
 
 
 def load(file):
@@ -6,24 +6,28 @@ def load(file):
     return [list(map(int, re.findall('\d+', line))) for line in f.readlines()]
 
 
-def is_valid(target, start, numbers, part1):
-  operators = '*+' if part1 else '*+|'
-  for variant in itt.product(operators, repeat=len(numbers)):
-    tmp = start
-    for operator, number in zip(variant, numbers):
-      match operator:
-        case '*': tmp *= number
-        case '+': tmp += number
-        case '|': tmp = int(f'{tmp}{number}')
-    if tmp == target: return target
-  return False
+def is_valid(target, numbers, part2):
+  subtotals = {target}
+  for number in reversed(numbers):
+    new_sub = set()
+    for sub in subtotals:
+      if not sub % number:
+        new_sub.add(sub // number)
+      if sub >= number:
+        new_sub.add(sub - number)
+      if not part2: continue
+      str_i, str_n = map(str,[sub, number])
+      if sub > number and str_i.endswith(str_n):
+        new_sub.add(int(str_i[:-len(str_n)]))
+    subtotals = new_sub
+  return target if 0 in subtotals else False
 
 
 def solve(p):
   part1 = part2 = 0
-  for target, start, *numbers in p:
-    part1 += is_valid(target, start, numbers, part1=True)
-    part2 += is_valid(target, start, numbers, part1=False)
+  for target, *numbers in p:
+    part1 += is_valid(target, numbers, part2=False)
+    part2 += is_valid(target, numbers, part2=True)
   return part1, part2
 
 
