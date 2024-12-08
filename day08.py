@@ -4,7 +4,7 @@ import time, collections as coll, itertools as itt
 def load(file):
   with open(file) as f:
     return {(x, y): c for y, row in enumerate(f.read().split('\n'))
-            for x, c in enumerate(row)}
+                      for x, c in enumerate(row)}
 
 
 def get_antinodes(p, antennas, min_mul, max_mul) -> set:
@@ -13,14 +13,14 @@ def get_antinodes(p, antennas, min_mul, max_mul) -> set:
     for (x1, y1), (x2, y2) in itt.combinations(poss, 2):
       for mul in range(min_mul, max_mul):
         dx, dy = x2 - x1, y2 - y1
-        nx, ny = x1 - dx * mul, y1 - dy * mul
-        mx, my = x2 + dx * mul, y2 + dy * mul
+        rp1 = x1 - dx * mul, y1 - dy * mul
+        rp2 = x2 + dx * mul, y2 + dy * mul
 
-        a, b = (nx, ny) in p, (mx, my) in p
+        a, b = rp1 in p, rp2 in p
         if not a and not b: break
 
-        if a: antinodes.add((nx, ny))
-        if b: antinodes.add((mx, my))
+        if a: antinodes.add(rp1)
+        if b: antinodes.add(rp2)
   return antinodes
 
 
