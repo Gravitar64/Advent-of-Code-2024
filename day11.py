@@ -9,15 +9,11 @@ def load(file):
 @functools.cache
 def count_stones(stone, blinks):
   if blinks == 0: return 1
-
-  string = str(stone)
-  length = len(string)
-
+  
   if stone == 0:
     return count_stones(1, blinks - 1)
-  elif not length % 2:
-    left = int(string[:length // 2])
-    right = int(string[length // 2:])
+  elif (lenght := len(str(stone))) % 2 == 0:
+    left, right = int(str(stone)[:lenght // 2]), int(str(stone)[lenght // 2:])
     return count_stones(left, blinks - 1) + count_stones(right, blinks - 1)
   else:
     return count_stones(stone * 2024, blinks - 1)
