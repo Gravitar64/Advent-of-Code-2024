@@ -10,7 +10,7 @@ def move_robots(p, times, w, h):
   for i, (x, y, dx, dy) in enumerate(p):
     x, y = (x + dx * times) % w, (y + dy * times) % h
     p[i] = x, y, dx, dy
-  return [(x,y) for x,y,_,_ in p]  
+  return [(x, y) for x, y, _, _ in p]
 
 
 def count_quadrants(robots, w, h):
@@ -18,7 +18,7 @@ def count_quadrants(robots, w, h):
   quadrants = [0] * 4
   for x, y in robots:
     if x == mid_w or y == mid_h: continue
-    quadrant = y // (mid_h+1) * 2 + x // (mid_w+1)
+    quadrant = y // (mid_h + 1) * 2 + x // (mid_w + 1)
     quadrants[quadrant] += 1
   return math.prod(quadrants)
 
@@ -44,7 +44,7 @@ def solve(p):
     part2 += 1
     robots = move_robots(p2, 1, w, h)
     if len(set(robots)) != len(robots): continue
-    show_robots(robots,w,h)
+    show_robots(robots, w, h)
     break
   return part1, part2
 
