@@ -29,9 +29,8 @@ def find_a(program, a, b, c, prg_pos):
   if abs(prg_pos) > len(program): return a
   for i in range(8):
     first_digit_out = run_program(a * 8 + i, b, c, program)[0]
-    if first_digit_out == program[prg_pos]:
-      e = find_a(program, a * 8 + i, b, c, prg_pos - 1)
-      if e: return e
+    if first_digit_out != program[prg_pos]: continue
+    if (e := find_a(program, a*8+i, b, c, prg_pos - 1)): return e
 
 
 def solve(p):
