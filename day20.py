@@ -1,42 +1,45 @@
-import time, itertools as itt
+import time
 
 
 def load(file):
   with open(file) as f:
-    grid = set()
+    spaces = set()
     for y, row in enumerate(f.read().split('\n')):
       for x, c in enumerate(row):
-        if c != '#': grid.add((x, y))
+        if c != '#': spaces.add((x, y))
         if c == 'S': start = (x, y)
-    return grid, start
+        if c == 'E': end = (x, y)
+    return spaces, start, end
 
 
 def neighbors(x, y):
   return (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)
 
 
-def gen_all_distances(grid, start):
-  queue, distances = [start], {start: 0}
+def get_shortest_path(spaces, start, end):
+  queue, seen = [(start, [start])], set()
   while queue:
-    pos = queue.pop(0)
+    pos, path = queue.pop(0)
+    if pos == end: return path
+
     for new_pos in neighbors(*pos):
-      if new_pos not in grid or new_pos in distances: continue
-      queue += [new_pos]
-      distances[new_pos] = distances[pos] + 1
-  return distances
+      if new_pos not in spaces or new_pos in seen: continue
+      seen.add(new_pos)
+      queue.append((new_pos, path + [new_pos]))
 
 
-def solve(grid, start):
+def solve(spaces, start, end):
   part1 = part2 = 0
-  dist = gen_all_distances(grid, start)
-  
-  for (ax, ay), (bx, by) in itt.combinations(dist, 2):
-    manh_dist = abs(ax - bx) + abs(ay - by)
-    if manh_dist > 20: continue
-    if dist[bx,by] - dist[ax,ay] - manh_dist < 100: continue
-    part1 += manh_dist == 2 
-    part2 += manh_dist < 21 
-  
+  path = get_shortest_path(spaces, start, end)
+
+  for a in range(len(path)):
+    for b in range(a + 102, len(path)):
+      (ax, ay), (bx, by) = path[a], path[b]
+      manh_dist = abs(ax - bx) + abs(ay - by)
+      if manh_dist > 20 or b - a - manh_dist < 100: continue
+      part1 += manh_dist == 2
+      part2 += manh_dist < 21
+
   return part1, part2
 
 
