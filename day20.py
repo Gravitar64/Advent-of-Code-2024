@@ -1,54 +1,41 @@
-import time
+import time, itertools as itt
 
 
 def load(file):
   with open(file) as f:
-    walls = set()
-    for y,row in enumerate(f.read().split('\n')):
-      for x,c in enumerate(row):
-        match c:
-          case '#': walls.add((x,y))
-          case 'S': start = (x,y)
-          case 'E': end = (x,y)
-    return walls, start, end, x+1, y+1    
-  
-def out_bound(x,y,w,h):
-  return not (0 <= x < w and 0 <= y < h)
+    grid = set()
+    for y, row in enumerate(f.read().split('\n')):
+      for x, c in enumerate(row):
+        if c != '#': grid.add((x, y))
+        if c == 'S': start = (x, y)
+    return grid, start
 
 
-def bfs(walls,start,end,w,h):
-  queue, seen = [(start,[])], set()
+def neighbors(x, y):
+  return (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)
+
+
+def gen_all_distances(grid, start):
+  queue, distances = [start], {start: 0}
   while queue:
-    (x,y),path = queue.pop(0)
-    if (x,y) == end: return path
-    for new_pos in ((x+1,y), (x-1,y), (x,y+1), (x,y-1)):
-      if new_pos in walls: continue
-      if new_pos in seen or out_bound(x,y,w,h): continue
-      seen.add(new_pos)
-      queue.append((new_pos, path + [new_pos]))
+    pos = queue.pop(0)
+    for new_pos in neighbors(*pos):
+      if new_pos not in grid or new_pos in distances: continue
+      queue += [new_pos]
+      distances[new_pos] = distances[pos] + 1
+  return distances
 
-def show_map(walls,path,w,h):
-  for y in range(h):
-    for x in range(w):
-      if (x,y) in walls:
-        print('#', end = '')
-      elif (x,y) in path:
-        print('O', end = '')
-      else:
-        print('.', end ='')
-    print()        
 
-def solve(walls, start, end, w, h):
+def solve(grid, start):
   part1 = part2 = 0
-  path = bfs(walls,start,end,w,h)  
-  walls_list = list(walls)
+  dist = gen_all_distances(grid, start)
   
-  len_path = len(path)
-  for i in range(len(walls_list)):
-    cheat = set(walls_list[:i] + walls_list[i+1:])
-    if len(bfs(cheat,start,end,w,h))-len_path <= -100:
-      print(i, walls_list[i], len(walls_list))
-      part1 += 1
+  for (ax, ay), (bx, by) in itt.combinations(dist, 2):
+    manh_dist = abs(ax - bx) + abs(ay - by)
+    if manh_dist > 20: continue
+    if dist[bx,by] - dist[ax,ay] - manh_dist < 100: continue
+    part1 += manh_dist == 2 
+    part2 += manh_dist < 21 
   
   return part1, part2
 
