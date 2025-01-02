@@ -10,11 +10,10 @@ def load(file):
 
 time_start = time.perf_counter()
 
-num_kp = {'7': 0, '8': 1,      '9': 2,
           '4': 1j, '5': 1 + 1j, '6': 2 + 1j,
           '1': 2j, '2': 1 + 2j, '3': 2 + 2j,
           ' ': 3j, '0': 1 + 3j, 'A': 2 + 3j}
-dir_kp = {' ': 0,  '^': 1,      'A': 2,
+dir_kp = {' ': 0, '^': 1, 'A': 2,
           '<': 1j, 'v': 1 + 1j, '>': 2 + 1j}
 
 
@@ -47,12 +46,12 @@ def gen_len(sub_path, depth, s=0):
 
 def solve(p):
   part1 = part2 = 0
-  
+
   for code in p:
     num_part = int(code[:3])
     part1 += num_part * gen_len(code, 3)
     part2 += num_part * gen_len(code, 26)
-  
+
   return part1, part2
 
 
