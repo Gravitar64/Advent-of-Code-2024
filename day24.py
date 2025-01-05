@@ -26,14 +26,14 @@ def get_errors(gates):
       errors.add(target)
 
     if gate == 'AND' and 'x00' not in [w1, w2]:
-      for supw1, supgate, subw2, *_ in gates:
-        if (target == supw1 or target == subw2) and supgate != 'OR':
+      for subw1, subgate, subw2, *_ in gates:
+        if (target == subw1 or target == subw2) and subgate != 'OR':
           errors.add(target)
           break
 
     if gate == 'XOR':
-      for supw1, supgate, subw2, *_ in gates:
-        if (target == supw1 or target == subw2) and supgate == 'OR':
+      for subw1, subgate, subw2, *_ in gates:
+        if (target == subw1 or target == subw2) and subgate == 'OR':
           errors.add(target)
           break
 
