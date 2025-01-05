@@ -1,3 +1,5 @@
+#Part 2 based on https://www.reddit.com/r/adventofcode/comments/1hl698z/comment/m3kt1je/ from lscddit
+
 import time
 
 
