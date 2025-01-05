@@ -48,7 +48,7 @@ def get_number(gates, wires):
     else:
       gates.append((w1, gate, w2, _, target))
 
-  return ''.join([str(wires[w]) for w in sorted(wires) if w[0] == 'z'][::-1])
+  return ''.join([str(wires[w]) for w in sorted(wires,reverse=True) if w[0] == 'z'])
 
 
 def solve(wires, gates):
