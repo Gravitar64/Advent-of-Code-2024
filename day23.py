@@ -12,8 +12,8 @@ def load(file):
 
 
 def solve(p):
-  part1 = len({frozenset(comb) for conn in p.values()
-               for comb in itt.combinations(conn, 3)
+  part1 = len({comb for conn in p.values()
+               for comb in itt.combinations(sorted(conn), 3)
                if all(set(comb).issubset(p[c]) for c in comb) and
                any(t[0] == 't' for t in comb)})
 
